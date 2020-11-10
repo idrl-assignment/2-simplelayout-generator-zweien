@@ -17,6 +17,30 @@ def generate_matrix(
         unit_n (int): 组件数
         positions (list): 每个元素代表每个组件的位置
     Returns:
-        np.ndarray: 布局矩阵
+        布局矩阵
     """
-    raise NotImplementedError  # TODO: 实现布局矩阵的生成
+    matrix = np.zeros(shape=(board_grid, board_grid))
+    units_per_row = int(board_grid / unit_grid)
+    for pos in positions:
+        row, col = get_row_col(pos, units_per_row)
+        idx_row = slice(row * unit_grid, (row + 1) * unit_grid)
+        idx_col = slice(col * unit_grid, (col + 1) * unit_grid)
+        matrix[idx_row, idx_col] = 1
+
+    return matrix
+
+
+def get_row_col(pos: int, units_per_row: int) -> tuple:
+    """计算行、列位置
+
+    Args:
+        pos (int): 1 <= pos <= units_per_row^2
+        units_per_row (int): 每行可放置组件的位置数
+
+    Returns:
+        tuple: row, col, 从 0 开始
+    """
+    pos_ = pos - 1
+    row = int(pos_ / units_per_row)
+    col = int(pos_ % units_per_row)
+    return row, col
